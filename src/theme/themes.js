@@ -1,7 +1,36 @@
-import { MD3DarkTheme, MD3LightTheme } from "react-native-paper";
+import {
+  MD3DarkTheme,
+  MD3LightTheme,
+  configureFonts,
+} from "react-native-paper";
+import merge from "deepmerge";
 
-export const lightTheme = {
+const fontConfig = {
+  default: {
+    regular: {
+      fontFamily: "Lexend-Regular",
+      fontWeight: "normal",
+    },
+    medium: {
+      fontFamily: "Lexend-Semibold",
+      fontWeight: "normal",
+    },
+    bold: {
+      fontFamily: "Lexend-Bold",
+      fontWeight: "bold",
+    },
+  },
+};
+
+const customFontConfig = configureFonts({
+  web: fontConfig,
+  ios: fontConfig,
+  android: fontConfig,
+});
+
+export const lightTheme = merge(MD3LightTheme, {
   ...MD3LightTheme,
+  fonts: customFontConfig,
   colors: {
     ...MD3LightTheme.colors,
     primary: "#84E14E",
@@ -16,11 +45,14 @@ export const lightTheme = {
     secondaryGreen: "#1B4B00",
     lightGreen: "#E7FFDA",
     backIcon: "#475069",
+    headerText: "#202422",
+    disableText: "#1B4B00",
   },
-};
+});
 
-export const darkTheme = {
+export const darkTheme = merge(MD3DarkTheme, {
   ...MD3DarkTheme,
+  fonts: customFontConfig,
   colors: {
     ...MD3DarkTheme.colors,
     primary: "#84E14E",
@@ -35,5 +67,7 @@ export const darkTheme = {
     secondaryGreen: "#1B4B00",
     lightGreen: "#E7FFDA",
     backIcon: "#ffffff",
+    headerText: "#DBDFDE",
+    disableText: "#ffffff",
   },
-};
+});
