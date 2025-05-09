@@ -7,12 +7,15 @@ import Login from "../screens/auth/Login";
 import SignUp from "../screens/auth/SignUp";
 import { useSelector } from "react-redux";
 import { darkTheme, lightTheme } from "../theme/themes";
+import ForgotPassword from "../screens/auth/ForgotPassword";
+import OtpScreen from "../screens/auth/OtpScreen";
+import ResetPassword from "../screens/auth/ResetPassword";
 
 const Stack = createNativeStackNavigator();
 
 const AppNavigation = () => {
   const { mode, systemTheme } = useSelector((state) => state.theme);
-  const isAuthenticated = false;
+  const isAuthenticated = true;
 
   const theme = useMemo(() => {
     if (mode === "light") return lightTheme;
@@ -30,6 +33,9 @@ const AppNavigation = () => {
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="ForgotPass" component={ForgotPassword} />
+        <Stack.Screen name="getOtp" component={OtpScreen} />
+        <Stack.Screen name="ResetPass" component={ResetPassword} />
       </Stack.Navigator>
     </NavigationContainer>
   );

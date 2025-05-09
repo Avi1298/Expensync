@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode } from "../store/themeSlice";
 import { useTheme } from "react-native-paper";
@@ -32,7 +38,7 @@ const Profile = ({ navigation }) => {
   }, [mode]);
 
   return (
-    <View
+    <SafeAreaView
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -104,7 +110,7 @@ const Profile = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

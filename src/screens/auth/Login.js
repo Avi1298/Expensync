@@ -1,11 +1,20 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import React, { useState } from "react";
 import { useTheme } from "react-native-paper";
 import SingleButton from "../../components/SingleButton";
 import RenderInput from "../../components/RenderInput";
 import Logo from "../../assets/images/Logo";
+import GoogleLogo from "../../assets/images/GoogleLogo";
+import AppleLogo from "../../assets/images/AppleLogo";
+import FacebookLogo from "../../assets/images/FacebookLogo";
 
-const Login = () => {
+const Login = ({ navigation }) => {
   const theme = useTheme();
   const [emailOrMobile, setEmailOrMobile] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +32,7 @@ const Login = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.logo}>
         <Logo />
       </View>
@@ -60,7 +69,10 @@ const Login = () => {
         />
       </View>
 
-      <TouchableOpacity style={styles.forgotPass}>
+      <TouchableOpacity
+        style={styles.forgotPass}
+        onPress={() => navigation.navigate("ForgotPass")}
+      >
         <Text
           style={{ fontFamily: "Lexend-Regular", color: theme.colors.primary }}
         >
@@ -73,14 +85,52 @@ const Login = () => {
         <Text style={[styles.signUpTextPrimary, { color: theme.colors.text }]}>
           Doesn’t Have An Account?
         </Text>
-        <Text style={[styles.signupText, { color: theme.colors.primary }]}>
-          Sign Up
-        </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+          <Text style={[styles.signupText, { color: theme.colors.primary }]}>
+            Sign Up
+          </Text>
+        </TouchableOpacity>
       </View>
       <View>
         <OrDivider />
       </View>
-    </View>
+
+      <View>
+        <TouchableOpacity
+          style={[styles.googleOpacity, { borderColor: theme.colors.primary }]}
+        >
+          <GoogleLogo />
+          <Text
+            style={[styles.googleText, { color: theme.colors.disableText }]}
+          >
+            Continue with Google
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.AppleOpacity, { borderColor: theme.colors.primary }]}
+        >
+          <AppleLogo />
+          <Text
+            style={[styles.googleText, { color: theme.colors.disableText }]}
+          >
+            Continue with Apple
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.facebookOpacity,
+            { borderColor: theme.colors.primary },
+          ]}
+        >
+          <FacebookLogo />
+          <Text
+            style={[styles.googleText, { color: theme.colors.disableText }]}
+          >
+            Continue with Facebook
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -147,5 +197,40 @@ const styles = StyleSheet.create({
     fontFamily: "Lexend-Regular",
     color: "#D6D6D6",
     fontWeight: "400",
+  },
+  googleOpacity: {
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    paddingVertical: 8,
+    borderRadius: 2,
+    flexDirection: "row",
+    gap: 70,
+    marginVertical: 16,
+    alignItems: "center",
+  },
+  AppleOpacity: {
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    paddingVertical: 6,
+    borderRadius: 2,
+    flexDirection: "row",
+    gap: 80,
+    alignItems: "center",
+  },
+  facebookOpacity: {
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    paddingVertical: 6,
+    borderRadius: 2,
+    flexDirection: "row",
+    gap: 70,
+    alignItems: "center",
+    marginVertical: 16,
+    alignItems: "center",
+  },
+  googleText: {
+    fontSize: 14,
+    fontWeight: "400",
+    fontFamily: "Lexend-Regular",
   },
 });

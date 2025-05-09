@@ -47,6 +47,10 @@ export const lightTheme = merge(MD3LightTheme, {
     backIcon: "#475069",
     headerText: "#202422",
     disableText: "#1B4B00",
+    borderColor: "#E6E6E6",
+    secondaryBg: "#EAEFED",
+    ldIcon: "#1B4B00",
+    dashboardDate: "#D9A200",
   },
 });
 
@@ -69,5 +73,9 @@ export const darkTheme = merge(MD3DarkTheme, {
     backIcon: "#ffffff",
     headerText: "#DBDFDE",
     disableText: "#ffffff",
+    borderColor: "#262626",
+    secondaryBg: "#1B2320",
+    ldIcon: "#CAF8EE",
+    dashboardDate: "#F3B600",
   },
 });

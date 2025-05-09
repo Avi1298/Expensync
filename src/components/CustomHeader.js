@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Platform,
+  SafeAreaView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Divider, useTheme } from "react-native-paper";
@@ -14,7 +15,7 @@ const CustomHeader = ({ title = "Screen", navigation }) => {
   const theme = useTheme();
   return (
     <>
-      <View
+      <SafeAreaView
         style={[
           styles.container,
           {
@@ -66,7 +67,7 @@ const CustomHeader = ({ title = "Screen", navigation }) => {
             </View>
           </TouchableOpacity>
         </View>
-      </View>
+      </SafeAreaView>
 
       <View style={styles.shadowContainer}>
         <Divider />
