@@ -51,6 +51,8 @@ export const lightTheme = merge(MD3LightTheme, {
     secondaryBg: "#EAEFED",
     ldIcon: "#1B4B00",
     dashboardDate: "#D9A200",
+    expenseCircle:'#BE242B',
+    incomeCircle:'#28B446'
   },
 });
 
@@ -77,5 +79,7 @@ export const darkTheme = merge(MD3DarkTheme, {
     secondaryBg: "#1B2320",
     ldIcon: "#CAF8EE",
     dashboardDate: "#F3B600",
+    expenseCircle:'#D32831',
+    incomeCircle:'#2DC94E'
   },
 });

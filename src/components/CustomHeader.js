@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "400",
+    fontFamily: "Lexend-Regular",
   },
   iconContainer: {
     flexDirection: "row",
