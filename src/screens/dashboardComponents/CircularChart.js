@@ -19,8 +19,20 @@ const Chart = ({
   const expenseColor = theme.colors.expenseCircle;
 
   const innerRadius = radius - strokeWidth - gapBetweenArcs;
+
+  const totalSweep = 540;
+
+  const totalAmount = income + expense;
+
+  const incomeSweepAngle =
+    totalAmount === 0 ? 0 : (income / totalAmount) * totalSweep;
+  const expenseSweepAngle =
+    totalAmount === 0 ? 0 : (expense / totalAmount) * totalSweep;
+
   const startAngle = -180;
-  const endAngle = 85;
+
+  const incomeEndAngle = startAngle + incomeSweepAngle;
+  const expenseEndAngle = startAngle + expenseSweepAngle;
 
   const polarToCartesian = (radius, angleInDegrees) => {
     const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
@@ -32,7 +44,11 @@ const Chart = ({
   const createArcPath = (r, startAngleArg, endAngleArg) => {
     const start = polarToCartesian(r, startAngleArg);
     const end = polarToCartesian(r, endAngleArg);
-    const largeArcFlag = endAngleArg - startAngleArg <= 180 ? "0" : "1";
+
+    let deltaAngle = endAngleArg - startAngleArg;
+    if (deltaAngle < 0) deltaAngle += 580;
+
+    const largeArcFlag = deltaAngle > 180 ? "1" : "0";
 
     return [
       "M",
@@ -60,7 +76,7 @@ const Chart = ({
       >
         {/* Outer arc (Expense) */}
         <Path
-          d={createArcPath(radius, startAngle, endAngle)}
+          d={createArcPath(radius, startAngle, expenseEndAngle)}
           stroke={expenseColor}
           strokeWidth={strokeWidth}
           fill="none"
@@ -69,7 +85,7 @@ const Chart = ({
 
         {/* Inner arc (Income) */}
         <Path
-          d={createArcPath(innerRadius, startAngle, endAngle)}
+          d={createArcPath(innerRadius, startAngle, incomeEndAngle)}
           stroke={incomeColor}
           strokeWidth={strokeWidth}
           fill="none"
@@ -108,6 +124,10 @@ const Chart = ({
 
 const CircularChart = () => {
   const theme = useTheme();
+
+  const income = 500000;
+  const expense = 400000;
+
   return (
     <View style={[styles.wrapper, { borderColor: theme.colors.borderColor }]}>
       <View>
@@ -115,11 +135,11 @@ const CircularChart = () => {
           Total Money
         </Text>
         <Text style={[styles.money, { color: theme.colors.text }]}>
-          ₹100,000,000
+          ₹{(income - expense).toLocaleString()}
         </Text>
       </View>
 
-      <Chart theme={theme} />
+      <Chart income={income} expense={expense} theme={theme} />
 
       <View style={styles.legendRow}>
         <View style={styles.legendItem}>
@@ -164,10 +184,10 @@ const styles = StyleSheet.create({
   legendContainer: {
     position: "absolute",
     alignItems: "flex-start",
-    marginLeft: 10,
+    marginLeft: 25,
   },
   incomeText: {
-    color: "#4CAF50",
+    color: "#1BA96E",
     marginBottom: 5,
     fontFamily: "Lexend-Regular",
   },

@@ -4,6 +4,8 @@ import CustomHeader from "../components/CustomHeader";
 import UpcomingsBills from "./dashboardComponents/UpcomingsBills";
 import CircularChart from "./dashboardComponents/CircularChart";
 import Expenses from "./dashboardComponents/Expenses";
+import Barchart from "./dashboardComponents/Barchart";
+import BudgetOverview from "./dashboardComponents/BudgetOverview";
 
 const DashboardScreen = ({ navigation }) => {
   return (
@@ -17,6 +19,8 @@ const DashboardScreen = ({ navigation }) => {
           <UpcomingsBills />
           <CircularChart />
           <Expenses />
+          <Barchart />
+          <BudgetOverview />
         </ScrollView>
       </View>
     </SafeAreaView>

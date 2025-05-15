@@ -51,8 +51,14 @@ export const lightTheme = merge(MD3LightTheme, {
     secondaryBg: "#EAEFED",
     ldIcon: "#1B4B00",
     dashboardDate: "#D9A200",
-    expenseCircle:'#BE242B',
-    incomeCircle:'#28B446'
+    expenseCircle: "#BE242B",
+    incomeCircle: "#28B446",
+    badgTextColorGreen: "#078800",
+    badgeGreenBg: "#E2FFE0",
+    badgeTextColorRed: "#C50303",
+    badgeRedBg: "#FFDDDD",
+    badgeTextColorYellow: "#7B7500",
+    badgeYellowBg: "#FFFFE1",
   },
 });
 
@@ -79,7 +85,13 @@ export const darkTheme = merge(MD3DarkTheme, {
     secondaryBg: "#1B2320",
     ldIcon: "#CAF8EE",
     dashboardDate: "#F3B600",
-    expenseCircle:'#D32831',
-    incomeCircle:'#2DC94E'
+    expenseCircle: "#FF1919",
+    incomeCircle: "#1BA96E",
+    badgTextColorGreen: "#0DFF00",
+    badgeGreenBg: "#2A3631",
+    badgeTextColorRed: "#FF1919",
+    badgeRedBg: "#362B2B",
+    badgeTextColorYellow: "#FFF200",
+    badgeYellowBg: "#2F2D25",
   },
 });
