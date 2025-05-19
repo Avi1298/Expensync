@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -5,30 +6,51 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
-import React, { useState } from "react";
 import { useTheme } from "react-native-paper";
+import { Formik } from "formik";
+import * as Yup from "yup";
+
 import SingleButton from "../../components/SingleButton";
 import RenderInput from "../../components/RenderInput";
 import Logo from "../../assets/images/Logo";
 import GoogleLogo from "../../assets/images/GoogleLogo";
 import AppleLogo from "../../assets/images/AppleLogo";
 import FacebookLogo from "../../assets/images/FacebookLogo";
+import useUserActions from "../../store/actions/userActions";
+
+const validationSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(2, "Name must be at least 2 characters")
+    .required("Name is required"),
+  email: Yup.string()
+    .email("Enter a valid email")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+});
 
 const SignUp = ({ navigation }) => {
   const theme = useTheme();
-  const [emailOrMobile, setEmailOrMobile] = useState("");
-  const [name, setName] = useState("");
+  const { signUp } = useUserActions();
+  const [error, setError] = useState(null);
 
-  const isFormValid = emailOrMobile.trim() !== "" && name.trim() !== "";
+  const OrDivider = () => (
+    <View style={styles.containerDivider}>
+      <View style={styles.line} />
+      <Text style={styles.orText}>Or</Text>
+      <View style={styles.line} />
+    </View>
+  );
 
-  const OrDivider = () => {
-    return (
-      <View style={styles.containerDivider}>
-        <View style={styles.line} />
-        <Text style={styles.orText}>Or</Text>
-        <View style={styles.line} />
-      </View>
-    );
+  const handleSubmit = async (values) => {
+    setError(null);
+    try {
+      await signUp(values);
+      navigation.navigate("Login");
+    } catch (err) {
+      setError(err?.message || "Sign up failed");
+    }
   };
 
   return (
@@ -55,23 +77,69 @@ const SignUp = ({ navigation }) => {
         </Text>
       </View>
 
-      <View style={{ marginTop: 45 }}>
-        <RenderInput
-          label="Enter Your Name"
-          value={name}
-          onChangeText={setName}
-        />
-        <RenderInput
-          label="Enter Email Or Mobile Number"
-          value={emailOrMobile}
-          onChangeText={setEmailOrMobile}
-        />
-      </View>
-      <SingleButton
-        text="Sign Up"
-        disabled={!isFormValid}
-        onPress={() => navigation.navigate("Login")}
-      />
+      <Formik
+        initialValues={{ name: "", email: "", password: "" }}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}
+      >
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+        }) => (
+          <>
+            <View style={{ marginTop: 45 }}>
+              <RenderInput
+                name="name"
+                label="Enter Your Name"
+                value={values.name}
+                onChangeText={handleChange("name")}
+                onBlur={handleBlur("name")}
+              />
+              {touched.name && errors.name && (
+                <Text style={styles.errorText}>{errors.name}</Text>
+              )}
+
+              <RenderInput
+                name="email"
+                label="Enter Email"
+                value={values.email}
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+              />
+              {touched.email && errors.email && (
+                <Text style={styles.errorText}>{errors.email}</Text>
+              )}
+
+              <RenderInput
+                name="password"
+                label="Password"
+                value={values.password}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                secureTextEntry
+              />
+              {touched.password && errors.password && (
+                <Text style={styles.errorText}>{errors.password}</Text>
+              )}
+            </View>
+
+            <SingleButton text={"Sign Up"} onPress={handleSubmit} />
+
+            {error && (
+              <Text
+                style={{ color: "red", textAlign: "center", marginTop: 10 }}
+              >
+                {error}
+              </Text>
+            )}
+          </>
+        )}
+      </Formik>
+
       <View style={styles.signTextWrapper}>
         <Text style={[styles.signUpTextPrimary, { color: theme.colors.text }]}>
           Already Have An Account ?
@@ -82,6 +150,7 @@ const SignUp = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
       </View>
+
       <View>
         <OrDivider />
       </View>
@@ -215,13 +284,19 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     flexDirection: "row",
     gap: 70,
-    alignItems: "center",
     marginVertical: 16,
     alignItems: "center",
   },
   googleText: {
     fontSize: 14,
     fontWeight: "400",
+    fontFamily: "Lexend-Regular",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 4,
+    marginLeft: 4,
     fontFamily: "Lexend-Regular",
   },
 });

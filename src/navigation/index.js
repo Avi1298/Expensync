@@ -15,7 +15,7 @@ const Stack = createNativeStackNavigator();
 
 const AppNavigation = () => {
   const { mode, systemTheme } = useSelector((state) => state.theme);
-  const isAuthenticated = true;
+  const isAuthenticated = false;
 
   const theme = useMemo(() => {
     if (mode === "light") return lightTheme;
