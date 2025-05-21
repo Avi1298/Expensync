@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import BottomTabNavigator from "./BottomTabNavigator";
@@ -10,12 +10,17 @@ import { darkTheme, lightTheme } from "../theme/themes";
 import ForgotPassword from "../screens/auth/ForgotPassword";
 import OtpScreen from "../screens/auth/OtpScreen";
 import ResetPassword from "../screens/auth/ResetPassword";
+import { getInitialScreen } from "../utils";
 
 const Stack = createNativeStackNavigator();
 
 const AppNavigation = () => {
   const { mode, systemTheme } = useSelector((state) => state.theme);
-  const isAuthenticated = false;
+  const { authenticated } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    console.log("Authenticated after login:", authenticated);
+  }, [authenticated]);
 
   const theme = useMemo(() => {
     if (mode === "light") return lightTheme;
@@ -26,16 +31,23 @@ const AppNavigation = () => {
   return (
     <NavigationContainer theme={theme}>
       <Stack.Navigator
-        initialRouteName={isAuthenticated ? "MainTabs" : "Login"}
         screenOptions={{ headerShown: false }}
+        key={authenticated ? "auth" : "guest"} // Forces stack reset
       >
-        <Stack.Screen name="MainTabs" component={BottomTabNavigator} />
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="ForgotPass" component={ForgotPassword} />
-        <Stack.Screen name="getOtp" component={OtpScreen} />
-        <Stack.Screen name="ResetPass" component={ResetPassword} />
+        {authenticated ? (
+          <Stack.Group>
+            <Stack.Screen name="MainTabs" component={BottomTabNavigator} />
+            <Stack.Screen name="Profile" component={Profile} />
+          </Stack.Group>
+        ) : (
+          <Stack.Group>
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="ForgotPass" component={ForgotPassword} />
+            <Stack.Screen name="getOtp" component={OtpScreen} />
+            <Stack.Screen name="ResetPass" component={ResetPassword} />
+          </Stack.Group>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

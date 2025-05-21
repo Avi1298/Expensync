@@ -1,3 +1,4 @@
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -5,37 +6,49 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
-import React, { useState } from "react";
 import { useTheme } from "react-native-paper";
+import { Formik } from "formik";
+import * as Yup from "yup";
 import SingleButton from "../../components/SingleButton";
 import RenderInput from "../../components/RenderInput";
 import Logo from "../../assets/images/Logo";
 import GoogleLogo from "../../assets/images/GoogleLogo";
 import AppleLogo from "../../assets/images/AppleLogo";
 import FacebookLogo from "../../assets/images/FacebookLogo";
+import useUserActions from "../../store/actions/userActions";
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().required("Email or Mobile is required"),
+  password: Yup.string().required("Password is required"),
+});
 
 const Login = ({ navigation }) => {
   const theme = useTheme();
-  const [emailOrMobile, setEmailOrMobile] = useState("");
-  const [password, setPassword] = useState("");
+  const { login } = useUserActions();
 
-  const isFormValid = emailOrMobile.trim() !== "" && password.trim() !== "";
-
-  const OrDivider = () => {
-    return (
-      <View style={styles.containerDivider}>
-        <View style={styles.line} />
-        <Text style={styles.orText}>Or</Text>
-        <View style={styles.line} />
-      </View>
-    );
+  const handleLoginSubmit = async (values, { setSubmitting }) => {
+    try {
+      await login(values);
+    } catch (error) {
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  const OrDivider = () => (
+    <View style={styles.containerDivider}>
+      <View style={styles.line} />
+      <Text style={styles.orText}>Or</Text>
+      <View style={styles.line} />
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.logo}>
         <Logo />
       </View>
+
       <View style={styles.headerContaier}>
         <Text
           style={[
@@ -55,32 +68,65 @@ const Login = ({ navigation }) => {
         </Text>
       </View>
 
-      <View style={{ marginTop: 45 }}>
-        <RenderInput
-          label="Enter Email Or Mobile Number"
-          value={emailOrMobile}
-          onChangeText={setEmailOrMobile}
-        />
-        <RenderInput
-          label="Password"
-          isPassword
-          value={password}
-          onChangeText={setPassword}
-        />
-      </View>
-
-      <TouchableOpacity
-        style={styles.forgotPass}
-        onPress={() => navigation.navigate("ForgotPass")}
+      <Formik
+        initialValues={{ email: "", password: "" }}
+        validationSchema={validationSchema}
+        onSubmit={handleLoginSubmit}
       >
-        <Text
-          style={{ fontFamily: "Lexend-Regular", color: theme.colors.primary }}
-        >
-          Forgot Password
-        </Text>
-      </TouchableOpacity>
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+          isValid,
+          isSubmitting,
+        }) => (
+          <>
+            <View style={{ marginTop: 45 }}>
+              <RenderInput
+                name="email"
+                label="Enter Email Or Mobile Number"
+                value={values.email}
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+                error={touched.email && errors.email}
+              />
+              <RenderInput
+                name="password"
+                label="Password"
+                isPassword
+                value={values.password}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                error={touched.password && errors.password}
+              />
+            </View>
 
-      <SingleButton text="Login" disabled={!isFormValid} />
+            <TouchableOpacity
+              style={styles.forgotPass}
+              onPress={() => navigation.navigate("ForgotPass")}
+            >
+              <Text
+                style={{
+                  fontFamily: "Lexend-Regular",
+                  color: theme.colors.primary,
+                }}
+              >
+                Forgot Password
+              </Text>
+            </TouchableOpacity>
+
+            <SingleButton
+              text="Login"
+              disabled={!isValid || isSubmitting}
+              onPress={handleSubmit}
+            />
+          </>
+        )}
+      </Formik>
+
       <View style={styles.signTextWrapper}>
         <Text style={[styles.signUpTextPrimary, { color: theme.colors.text }]}>
           Doesn’t Have An Account?
@@ -91,9 +137,8 @@ const Login = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
       </View>
-      <View>
-        <OrDivider />
-      </View>
+
+      <OrDivider />
 
       <View>
         <TouchableOpacity

@@ -7,6 +7,7 @@ import { PaperProvider } from "react-native-paper";
 import { setSystemTheme } from "./src/store/themeSlice";
 import { lightTheme, darkTheme } from "./src/theme/themes";
 import * as Font from "expo-font";
+import { SnackbarProvider } from "./src/components/Snackbar";
 
 function MainApp() {
   const dispatch = useDispatch();
@@ -27,7 +28,9 @@ function MainApp() {
 
   return (
     <PaperProvider theme={theme}>
-      <AppNavigation />
+      <SnackbarProvider>
+        <AppNavigation />
+      </SnackbarProvider>
     </PaperProvider>
   );
 }

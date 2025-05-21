@@ -9,12 +9,13 @@ export default function useAuth() {
         config({ auth: false, multipart: false })
       );
     },
-    login: (data) => {
-      return instance.post(
+    login: async (data) => {
+      const response = await instance.post(
         "auth/login",
         data,
         config({ auth: false, multipart: false })
       );
+      return response.data;
     },
   };
 }

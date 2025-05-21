@@ -1,6 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persistReducer } from "redux-persist";
-import { LOGIN, SIGN_UP } from "../actions/actionTypes";
+import {
+  SIGN_UP,
+  LOGIN_REQUEST,
+  LOGIN_SUCCESS,
+  LOGIN_FAILURE,
+} from "../actions/actionTypes";
 
 const persistConfig = {
   key: "user",
@@ -38,20 +43,21 @@ const reducer = (state = initialState, action = {}) => {
         ...state,
         loading: false,
       };
-    case `${LOGIN}_PENDING`:
+    case LOGIN_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case `${LOGIN}_FULFILLED`:
+    case LOGIN_SUCCESS:
+      const { user, token } = payload;
       return {
         ...state,
         loading: false,
-        user: payload.user,
-        token: payload.token,
+        user,
+        token,
         authenticated: true,
       };
-    case `${LOGIN}_REJECTED`:
+    case LOGIN_FAILURE:
       return {
         ...state,
         loading: false,
@@ -60,4 +66,5 @@ const reducer = (state = initialState, action = {}) => {
       return state;
   }
 };
+
 export default persistReducer(persistConfig, reducer);
