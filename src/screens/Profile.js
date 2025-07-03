@@ -5,15 +5,18 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode } from "../store/themeSlice";
 import { useTheme } from "react-native-paper";
 import { Appearance } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import useUserActions from "../store/actions/userActions";
 
 const Profile = ({ navigation }) => {
   const dispatch = useDispatch();
+  const { logout } = useUserActions();
   const { mode } = useSelector((state) => state.theme);
   const theme = useTheme();
 
@@ -25,6 +28,30 @@ const Profile = ({ navigation }) => {
     } else {
       dispatch(setMode(selectedMode));
     }
+  };
+
+  const handleLogout = () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Logout",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await logout();
+
+              navigation.replace("Login");
+            } catch (error) {
+              console.error("Logout failed", error);
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   useEffect(() => {
@@ -110,6 +137,15 @@ const Profile = ({ navigation }) => {
           </Text>
         </TouchableOpacity>
       </View>
+
+      <TouchableOpacity
+        style={[styles.logoutButton, { backgroundColor: theme.colors.primary }]}
+        onPress={handleLogout}
+      >
+        <Text style={[styles.logoutButtonText, { color: theme.colors.text }]}>
+          Logout
+        </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -126,6 +162,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     marginBottom: 12,
     marginTop: 16,
+    fontFamily: "Lexend-Regular",
   },
   buttonGroup: {
     flexDirection: "row",
@@ -140,5 +177,18 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: "500",
+    fontSize: 14,
+    fontFamily: "Lexend-Regular",
+  },
+  logoutButton: {
+    marginTop: 40,
+    paddingVertical: 12,
+    borderRadius: 4,
+    alignItems: "center",
+  },
+  logoutButtonText: {
+    fontWeight: "500",
+    fontSize: 14,
+    fontFamily: "Lexend-Regular",
   },
 });

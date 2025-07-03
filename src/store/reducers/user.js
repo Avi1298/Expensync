@@ -5,6 +5,9 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
+  LOGOUT_REQUEST,
+  LOGOUT_SUCCESS,
+  LOGOUT_FAILURE,
 } from "../actions/actionTypes";
 
 const persistConfig = {
@@ -58,6 +61,20 @@ const reducer = (state = initialState, action = {}) => {
         authenticated: true,
       };
     case LOGIN_FAILURE:
+      return {
+        ...state,
+        loading: false,
+      };
+    case LOGOUT_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case LOGOUT_SUCCESS:
+      return {
+        ...initialState,
+      };
+    case LOGOUT_FAILURE:
       return {
         ...state,
         loading: false,

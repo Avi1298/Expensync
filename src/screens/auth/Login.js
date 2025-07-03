@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 import { useTheme } from "react-native-paper";
 import { Formik } from "formik";
@@ -16,6 +17,7 @@ import GoogleLogo from "../../assets/images/GoogleLogo";
 import AppleLogo from "../../assets/images/AppleLogo";
 import FacebookLogo from "../../assets/images/FacebookLogo";
 import useUserActions from "../../store/actions/userActions";
+import { useSelector } from "react-redux";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required("Email or Mobile is required"),
@@ -25,6 +27,7 @@ const validationSchema = Yup.object().shape({
 const Login = ({ navigation }) => {
   const theme = useTheme();
   const { login } = useUserActions();
+  const { loading } = useSelector((s) => s.auth);
 
   const handleLoginSubmit = async (values, { setSubmitting }) => {
     try {
@@ -45,6 +48,11 @@ const Login = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {loading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color={theme.colors.primary} />
+        </View>
+      )}
       <View style={styles.logo}>
         <Logo />
       </View>
@@ -82,6 +90,7 @@ const Login = ({ navigation }) => {
           touched,
           isValid,
           isSubmitting,
+          submitCount,
         }) => (
           <>
             <View style={{ marginTop: 45 }}>
@@ -91,7 +100,7 @@ const Login = ({ navigation }) => {
                 value={values.email}
                 onChangeText={handleChange("email")}
                 onBlur={handleBlur("email")}
-                error={touched.email && errors.email}
+                error={submitCount > 0 && errors.email}
               />
               <RenderInput
                 name="password"
@@ -100,7 +109,7 @@ const Login = ({ navigation }) => {
                 value={values.password}
                 onChangeText={handleChange("password")}
                 onBlur={handleBlur("password")}
-                error={touched.password && errors.password}
+                error={submitCount > 0 && errors.password}
               />
             </View>
 
@@ -277,5 +286,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "400",
     fontFamily: "Lexend-Regular",
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 10,
   },
 });

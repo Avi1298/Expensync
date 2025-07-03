@@ -17,5 +17,13 @@ export default function useAuth() {
       );
       return response.data;
     },
+    logout: async () => {
+      const response = await instance.post(
+        "auth/logout",
+        {},
+        config({ auth: true })
+      );
+      return response.data;
+    },
   };
 }

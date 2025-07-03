@@ -5,7 +5,7 @@ import { useSnackbar } from "../../components/Snackbar";
 
 export default function useUserActions() {
   const dispatch = useDispatch();
-  const { login, signUp } = useAuth();
+  const { login, signUp, logout } = useAuth();
 
   const snackbar = useSnackbar();
 
@@ -61,6 +61,27 @@ export default function useUserActions() {
         });
         console.error("Login error:", error);
         dispatch({ type: types.LOGIN_FAILURE, payload: error });
+        throw error;
+      }
+    },
+
+    logout: async () => {
+      dispatch({ type: types.LOGOUT_REQUEST });
+      try {
+        await logout();
+        dispatch({ type: types.LOGOUT_SUCCESS });
+        snackbar.showMessage({
+          message: "Logged out successfully",
+          variant: "success",
+        });
+      } catch (error) {
+        const messageFromAPI =
+          error?.response?.data?.message || "Logout failed";
+        snackbar.showMessage({
+          message: messageFromAPI,
+          variant: "error",
+        });
+        dispatch({ type: types.LOGOUT_FAILURE, payload: error });
         throw error;
       }
     },

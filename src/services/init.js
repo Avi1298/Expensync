@@ -6,9 +6,7 @@ export const instance = axios.create({
   baseURL: BASE_API_URL,
 });
 
-// Config generator for request headers
 export const config = ({ multipart = false, auth = true } = {}) => {
-  // Assuming your token is stored under auth slice (adjust if different)
   const { token } = store.getState()?.auth || {};
 
   const headers = {

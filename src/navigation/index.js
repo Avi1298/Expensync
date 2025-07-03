@@ -10,7 +10,6 @@ import { darkTheme, lightTheme } from "../theme/themes";
 import ForgotPassword from "../screens/auth/ForgotPassword";
 import OtpScreen from "../screens/auth/OtpScreen";
 import ResetPassword from "../screens/auth/ResetPassword";
-import { getInitialScreen } from "../utils";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,7 +31,7 @@ const AppNavigation = () => {
     <NavigationContainer theme={theme}>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        key={authenticated ? "auth" : "guest"} // Forces stack reset
+        key={authenticated ? "auth" : "guest"}
       >
         {authenticated ? (
           <Stack.Group>
